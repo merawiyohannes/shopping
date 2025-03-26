@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} | Ale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="">
+    <nav class="py-6 bg-red-700 sm:items-center flex flex-col space-y-2 sm:flex-col  xl:flex-row xl:justify-between ">
+        <div class="m-3 p-4 mx-auto sm:w-fit flex  sm:max-w-lg  sm:items-center  ">
+            <a href="{% url 'home_view' %}" class=" flex items-center space-x-2 ">
+                <img src="{% static 'images/logo3.png' %}" class="w-10 h-10 sm:w-20 sm:h-20 rounded-full border border-red-500 shadow-md"><span class="text-2xl text-white animate-pulse">ALE SHOPPING</span>
+            </a>
+        </div>
+
+
+        <div class="">
+            {% block search %}
+            {% endblock %}
+        </div>
+
+        <div class="flex flex-row mx-auto space-x-2 w-fit  sm:space-x-3 ">
+            <a href="{% url 'home_view' %}" class="text-white rounded-xl bg-blue-700 hover:bg-blue-900 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md ">Home</a>
+            {% if request.user.is_authenticated %}
+                {% if request.user.is_superuser %}
+                    <a href="{% url 'add_item_view' %}" class="text-white rounded-xl bg-teal-500 hover:bg-teal-700 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md " title="Add new item">Add Item</a>
+                    <a href="{% url 'chat_view' %}" class="text-white rounded-xl bg-yellow-500 hover:bg-yellow-700 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md " title="Add item to cart">Chats</a>
+                {% else %}
+                    <a href="{% url 'contact_view' %}" class="text-white rounded-xl bg-yellow-500 hover:bg-yellow-700 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md " title="messages">message</a>
+                {% endif %}
+                <form method="POST" action="{% url 'logout_view' %}" class="">{% csrf_token %}
+                    <button class="text-white rounded-xl bg-red-500 hover:bg-red-800 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md " type="submit">Logout</button>
+                </form>
+            {% endif %}
+
+            {% if not request.user.is_authenticated %}
+                <a href="{% url 'signup_view' %}" class="text-white rounded-xl bg-teal-500 hover:bg-teal-700 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md" title="sign up">Signup</a>
+                <a href="{% url 'login_view' %}" class="text-white rounded-xl bg-gray-500 hover:bg-gray-700 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md" title="log in">Login</a>
+            {% endif %}
+        </div>
+
+        <!-- <div class="space-x-3  mr-3">
+            <a href="#" class="text-white  bg-teal-500 hover:bg-teal-700 border-b px-3 py-2 rounded-xl font-sans shadow-md ">Sign in</a>
+            <a href="#" class="text-white  bg-gray-500 hover:bg-gray-700 border-b px-3 py-2 rounded-xl font-sans shadow-md ">Log in</a>
+
+        </div> -->
+        
+    </nav>
+
+    <div class="">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer class="p-4 bg-red-700 grid md:grid-cols-3 gap-4 grid-cols-1">
+        <div class="space-y-2 p-4">
+            <h1 class="text-2xl text-white">Adress</h1>
+            <p class="flex items-center space-x-2">
+                <img src="{% static 'images/phone.jpg' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md">
+                <span class="text-white">+251954545454</span>
+            </p>
+            <p class="flex items-center space-x-2">
+                <img src="{% static 'images/email.png' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md bg-white">
+                <span class="text-white hover:text-red-400 transition-all duration-300">aleshopping@gmail.com</span>
+            </p>
+        </div>
+        <div class="space-y-3  p-4">
+            <h1 class="text-2xl text-white">Social-media Links </h1>
+            <a href="#" class="block">
+                <p class="flex items-center space-x-2">
+                    <img src="{% static 'images/fb.png' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md">
+                    <span class="text-white hover:text-red-400 transition-all duration-300">facebook</span>
+                </p>
+            </a>
+            <a href="#" class="block">
+                <p class="flex items-center space-x-2">
+                    <img src="{% static 'images/insta.jpg' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md">
+                    <span class="text-white hover:text-red-400 transition-all duration-300">Instagram</span>
+                </p>
+            </a>
+            <a href="#" class="block">
+                <p class="flex items-center space-x-2">
+                    <img src="{% static 'images/tt.png' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md bg-white">
+                    <span class="text-white hover:text-red-400 transition-all duration-300">TikTok</span>
+                </p>
+            </a>
+            <a href="#" class="block">
+                <p class="flex items-center space-x-2">
+                    <img src="{% static 'images/yt.jpg' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md">
+                    <span class="text-white hover:text-red-400 transition-all duration-300">YouTube</span>
+                </p>
+            </a>
+        </div>
+        <div class="space-y-2 p-4">
+            <h1 class="text-2xl text-white">Quick links</h1>
+            <ul class="space-y-3 pl-4">
+                
+                <a href="{% url 'home_view' %}" class="block text-white hover:text-red-400 transition-all duration-300">Home</a>
+                <a href="#" class="block text-white hover:text-red-400 transition-all duration-300">About us</a>
+                <a href="#" class="block text-white hover:text-red-400 transition-all duration-300">Order</a>
+                <a href="#" class="block text-white hover:text-red-400 transition-all duration-300">Contact</a>
+            </ul>
+        </div>        
+        
+    </footer>
+</body>
+</html>

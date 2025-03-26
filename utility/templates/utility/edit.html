@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Add-item{% endblock %}
+
+{% block content %}
+
+    <div class="m-7 p-7 bg-red-900 border sm:max-w-lg sm:mx-auto flex flex-col justify-center items-center border-yellow-400 rounded-xl shadow-md">
+        <div class="">
+            <h1 class="text-3xl font-bold text-yellow-400 text-center">Edit The Item</h1>
+        </div>
+        <div class="">
+            <form method="POST" action="" class="space-y-6 flex flex-col" enctype="multipart/form-data" >
+                {% csrf_token %}
+                <label for="category" class="text-yellow-400 text-xl text-bold">Category</label>
+                {{ form.category }}
+
+                <label for="name" class="text-yellow-400 text-xl text-bold">Name</label>
+                {{ form.name }}
+
+                <label for="description" class="text-yellow-400 text-xl text-bold">Description</label>
+                {{ form.description }}
+
+                <label for="price" class="text-yellow-400 text-xl text-bold">Price</label>
+                {{ form.price }}
+
+                <label for="images" class="text-yellow-400 text-xl text-bold">Images</label>
+                <div class="text-white ">
+                    {{ form.images }}
+                </div>
+                <label for="is_sold" class="text-yellow-400 text-xl text-bold">is_sold {{ form.is_sold }}</label>
+                
+
+                <input type="submit" value="Edit Item" class="text-white px-4 py-2 rounded-xl w-full bg-green-500 hover:bg-green-700">
+
+            </form>
+        </div>
+
+    </div>
+
+{% endblock %}

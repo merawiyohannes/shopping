@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Welcome to {% endblock %}
+
+{% block search %}
+    <div class=" bg-white sm:bg-transparent w-fit mx-auto">
+        <form method="GET" action="{% url 'search_view' %}" class="flex flex-col sm:flex-row sm:items-center ">
+            <div class="flex">
+            
+                <label for="filter" class="text-black bg-yellow-400 px-4 py-1 ">Filter by 👉</label>
+                <select name="filter" id="filter" class="px-4 py-1">
+                    <option value="category">category</option>
+                    <option value="item_name">item_name</option>
+                    <option value="price_range">max_price_range</option>
+
+                </select>
+            </div>
+            <div class="flex">
+                <input type="search" name="search" class="px-4 py-2 sm:rounded-lg sm:border-2 sm:border-red-500 shadow-sm sm:focus:ring-2 focus:ring-red-900 focus:border-red-900 focus:outline-none" placeholder="search...">
+                <button class="w-fit px-4 py-1 bg-blue-500 hover:bg-blue-600 text-white sm:rounded-xl" type="submit">search</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 sm:grid-cols-3 bg-black">
+    <div class="flex justify-start p-2">
+        <img src="{% static 'images/girl.jpg' %}" alt="" class="w-full object-cover">
+    </div>
+    <div class="p-5 flex flex-col bg-transparent  justify-center items-center ">
+        <p class="text-white text-center  text-2xl font-mono">ALE SHOPPING</p>
+        <p class="text-white text-center  text-2xl font-mono italic">"We Have Every Thing You Need"</p>
+        <P class="text-white text-center  font-extralight">Thank you for visiting us.</P>
+    </div>
+    <div class="flex justify-end p-2">
+        <img src="{% static 'images/girl2.jpg' %}" alt="" class="w-full object-cover    ">
+
+    </div>
+</div>
+<div class="m-4 p-5 rounded-xl bg-red-300">
+    <p class="text-center text-xl sm:text-2xl italic font-semibold">Avaliable Items</p>
+</div>
+
+<div class="m-3  grid grid-cols-1 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-10 rounded-xl">
+        {% for item in page_items %}
+            <div class="m-4 p-6 rounded-xl bg-red-300 hover:bg-red-400">
+                <a href="{% url 'detail_view' item.id %}" class="block">
+                    <div class="">
+                        {% if item.images %}
+                            <img src="{{ item.images.url }}" alt="" class="mx-auto rounded-xl">
+                        {% else %}
+                            <img src="{{ 'media/item_images/default.png' }}" alt="" class="mx-auto rounded-xl">
+                        {% endif %}
+                        </div>
+                    <div class="text-center">
+                        <p class="border-b text-2xl text-bold">{{ item.name }}</p>
+                        <p class="border-b text-xl text-bold"><strong class="">${{ item.price }}</strong></p>
+                    </div>
+                    <div class="mt-3 text-center">
+                        {% if item in new_items %}
+                            <label for="" class="mt-3 px-3 py-1 bg-yellow-400 text-black ">NEW</label>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    
+    
+</div>
+<div class=" flex justify-between m-4 p-5 w-fit mx-auto space-x-4 items-center">
+    {% if page_items.has_previous %}
+        <a href="?page={{ page_items.previous_page_number }}" title="previous page" class="rounded-xl px-3 py-1  hover:bg-gray-500">⏪previous</a>
+    {% endif %}
+
+    <span class="text-center">page {{ page_items.number }} of {{ page_items.paginator.num_pages }} </span>
+
+    {% if page_items.has_next %}
+        <a href="?page={{ page_items.next_page_number }}" title="next page" class="rounded-xl px-3 py-1  hover:bg-gray-500">next⏩</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Chat-seller{% endblock %}
+
+{% block content %}
+<div class="flex flex-col border border-gray-700 m-7 bg-white sm:max-w-lg justify-center items-center sm:mx-auto">
+    <div class=" m-5 ">
+        <h1 class="text-black  text-3xl">messages </h1>
+    </div>
+    <div id="messages-container" class="flex  flex-col space-y-6 p-5 border w-full max-h-96 overflow-y-auto">
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.created_by  == request.user %}
+                    <p class="p-2 bg-blue-400 text-white self-end ite rounded-xl border w-fit">{{ message.text }} {{ sent_time }}</p>
+                {% else %}
+                    <p class="p-2 bg-gray-400 rounded-xl self-start border w-fit">{{ message.text }} {{ sent_time }}</p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="flex  items-center  justify-center  p-7 w-full border-t border-black bg-red-900">
+        <form action="" method="POST" class="">
+            {% csrf_token %}
+            {{ form.text }}
+            <input type="submit" value="send" class="px-3 py-2 text-white rounded-xl bg-teal-500 hover:bg-teal-700">
+        </form>
+    </div>
+</div>
+
+<!-- JavaScript for Auto-Scroll -->
+<script>
+    function scrollToBottom() {
+        let chatContainer = document.getElementById("messages-container");
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // Scroll to bottom when page loads
+    window.onload = scrollToBottom;
+
+    // Scroll to bottom when a new message is added
+    document.querySelector("form").addEventListener("submit", function() {
+        setTimeout(scrollToBottom, 100); // Wait a bit for new message to load
+    });
+</script>
+{% endblock %}

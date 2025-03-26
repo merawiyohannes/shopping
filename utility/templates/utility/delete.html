@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %} delete-item {% endblock  %}
+
+{% block content %}
+    <div class="m-7 p-7 sm:w-fit sm:mx-auto flex flex-col space-y-7 justify-center items-center rounded-xl border border-red-500 shadow-md">
+        <h1 class="text-center text-3xl ">Do you want to Delete
+            <strong class="text-center italic font-bold text-red-500">{{ item.name }}</strong> 
+            item?
+        </h1>
+        <form method="POST" action="" class="flex flex-row space-x-7 justify-center">
+            {% csrf_token %}
+            <button type="submit" class="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-700 font-bold">yes, i want to delete</button>
+            <a href="{% url 'detail_view' item.id %}" class="block px-4 py-2 rounded-xl bg-green-500 hover:bg-green-700 font-bold">No, i don't want </a>
+        </form>
+    </div>
+{% endblock %}
+    

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}signup{% endblock %}
+{% block content %}
+<div class="bg-red-500 sm:mx-auto flex flex-col space-y-9 items-center justify-center border border-teal-500 rounded-xl sm:max-w-2xl m-7 p-7">
+        <h1 class="text-center text-red-900 text-4xl font-bold">Signup Form</h1>
+
+        <form method="POST" action="" class="space-y-4">
+            {% csrf_token %}
+            <Label for="username" class="text-xl font-semibold">Name</Label>
+            {{ form.username }}
+
+            {% if form.username.errors %}
+                <div class="px-2 bg-white text-red-700 text-sm">
+                    **{{ form.username.errors.0 }}
+                </div>
+            {% endif %}
+
+            <Label for="email" class="text-xl font-semibold">Email</Label>
+            {{ form.email }}
+
+            {% if form.email.errors %}
+                <div class="px-2 bg-white text-red-700 text-sm">
+                    **{{ form.email.errors.0 }}
+                </div>
+            {% endif %}
+        
+
+            <Label for="password1" class="text-xl font-semibold">password</Label>
+            {{ form.password1 }}
+
+            {% if form.password1.errors %}
+                <div class="px-2 animate-pulse bg-white text-red-700 text-sm">
+                    **{{ form.password1.errors.0 }}
+                </div>
+            {% endif %}
+
+            <Label for="password2" class="text-xl font-semibold">confirm password</Label>
+            {{ form.password2 }}
+
+            {% if form.password2.errors %}
+                <div class="px-2  animate-pulse bg-white text-red-700 text-sm">
+                    **{{ form.password2.errors.0 }}
+                </div>
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="px-2 animate-pulse bg-white text-red-700 text-sm">
+                    {% for error in form.non_field_errors %}
+                        **{{ error }}
+                    {% endfor %}
+                </div>
+                
+            {% endif %}
+
+            <input type="submit" value="Sign-up" class="mt-7 block text-2xl text-center px-2 py-1 rounded-xl w-full bg-teal-500 hover:bg-teal-700">
+
+        </form>
+
+        <p class="mt-2 p-5 text-black text-center">Have an account? 
+            <a href="{% url 'login_view' %}">
+                <span class="italic hover:text-blue-700  px-2 text-bold text-white">Login Here</span>
+            </a>
+        </p>
+   
+</div>
+{% endblock %}
