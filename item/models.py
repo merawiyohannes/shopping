@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
+from cloudinary_storage.storage import MediaCloudinaryStorage
+
 
 class Category(models.Model):
     name = models.CharField(max_length=150)
@@ -19,7 +21,7 @@ class Item(models.Model):
     price = models.FloatField()
     is_sold = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    images = CloudinaryField('image', null=True, blank=True)    
+    images = models.ImageField(upload_to="item_images/", storage=MediaCloudinaryStorage(), default="item_images/default.png", null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     
     
