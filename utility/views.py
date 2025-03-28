@@ -8,10 +8,6 @@ from item.models import Item
 
 def delete_view(request, pk):
     item = get_object_or_404(Item, pk=pk)
-    if item.images and item.images.name != "default.png":
-        item_path = item.images.path
-        if os.path.isfile(item_path):
-            os.remove(item_path)
     if request.method == "POST":
         item.delete()
         return redirect('home_view')
