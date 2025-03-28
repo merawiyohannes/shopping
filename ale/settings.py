@@ -9,8 +9,22 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 
 from pathlib import Path
+
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dhywmh7qx',
+    'API_KEY': '167579148238582',
+    'API_SECRET': 'R4OlYTlm9-kzec8oJqNORp8Ilpo'
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +57,8 @@ INSTALLED_APPS = [
     'conversation',
     'utility',
     'search',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
