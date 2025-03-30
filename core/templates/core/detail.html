@@ -14,7 +14,7 @@
             <div class="p-5 space-y-5 flex flex-col">
                 <h1 class="text-2xl sm:text-4xl font-bold text-center">Details about <span class="text-3xl sm:text-5xl text-red-800 text-center">{{ item.name }}</span></h1>
                 <label for="" class="text-2xl sm:text-3xl font-semibold border-b">Name: {{ item.name }}</label>
-                <label for="" class="text-2xl sm:text-3xl font-semibold border-b">Price: $<strong class="text-2xl sm:text-4xl font-extrabold text-yellow-600">{{ item.price }}</strong></label>
+                <label for="" class="text-2xl sm:text-3xl font-semibold border-b">Price: <strong class="text-2xl sm:text-4xl font-extrabold text-yellow-600">{{ item.price }}</strong> Birr</label>
                 {% if item.description  %}
                     <label for="" class="text-2xl sm:text-3xl font-semibold border-b">Description: <p class="text-xl">{{ item.description }}</p></label>
                 {% endif %}
@@ -52,7 +52,7 @@
                             </div>
                             <div class="text-center">
                                 <p class="border-b text-2xl text-bold">{{ related_item.name }}</p>
-                                <p class="border-b text-xl text-bold"><strong class="">${{ related_item.price }}</strong></p>
+                                <p class="border-b text-xl text-bold"><strong class="">{{ related_item.price }}</strong> Birr</p>
                             </div>
                             
                         </a>
