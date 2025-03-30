@@ -41,6 +41,5 @@ def add_item_view(request):
             return redirect('home_view',)
         
     else:
-        form = AddItemForm()
-        
+        form = AddItemForm()   
     return render(request, "utility/add.html", {"form":form})

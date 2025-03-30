@@ -50,7 +50,7 @@
                         {% if item.images %}
                             <img src="{{ item.images.url }}" alt="" class="mx-auto rounded-xl">
                         {% else %}
-                            <img src="{{ 'media/item_images/default.png' }}" alt="" class="mx-auto rounded-xl">
+                            <img src="{% static 'images/default.png' %}" alt="" class="mx-auto rounded-xl">
                         {% endif %}
                         </div>
                     <div class="text-center">

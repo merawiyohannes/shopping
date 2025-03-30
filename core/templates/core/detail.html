@@ -8,7 +8,7 @@
                 {% if item.images %}
                     <img src="{{ item.images.url }}" alt="{{ item.name }}" class="rounded-xl border border-red-800 shadow-md w-full object-cover">
                 {% else %}
-                    <img src="{{ 'media/item_images/default.png' }}" alt="" class="rounded-xl border border-red-800 shadow-md w-full object-cover">
+                    <img src="{% static 'images/default.png' %}" alt="" class="rounded-xl border border-red-800 shadow-md w-full object-cover">
                 {% endif %}
                 </div>
             <div class="p-5 space-y-5 flex flex-col">
@@ -47,7 +47,7 @@
                                 {% if related_item.images %}
                                     <img src="{{ related_item.images.url }}" alt="" class="mx-auto rounded-xl">
                                 {% else %}
-                                    <img src="{{ 'media/item_images/default.png' }}" alt="" class="mx-auto rounded-xl">
+                                    <img src="{% static 'images/default.png' %}" alt="" class="mx-auto rounded-xl">
                                 {% endif %}
                             </div>
                             <div class="text-center">
