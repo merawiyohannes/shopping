@@ -10,18 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import cloudinary
+import os
 import cloudinary.uploader
 import cloudinary.api
-
-
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dhywmh7qx',
-    'API_KEY': '167579148238582',
-    'API_SECRET': 'R4OlYTlm9-kzec8oJqNORp8Ilpo'
+    'CLOUD_NAME': os.getenv("CLOUD_NAME"),
+    'API_KEY': os.getenv("API_KEY"),
+    'API_SECRET': os.getenv("API_SECRET")
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
@@ -34,12 +36,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-nj$y9hqs%g!l1+t_xjm9&e9o#$9!u8ba^()##jz0*z3pts(4i8'
+SECRET_KEY = os.getenv('SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["ale-shopping.onrender.com", "*"]
+ALLOWED_HOSTS = ["ale-shopping.onrender.com"]
 
 
 # Application definition
