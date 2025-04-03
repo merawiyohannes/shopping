@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'search',
     'cloudinary',
     'cloudinary_storage',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -94,7 +95,12 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ale.wsgi.application'
+ASGI_APPLICATION = 'ale.asgi.application'
+CHANNEL_LAYERS = {
+    'default':{
+        'BACKEND':'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 
 # Database
