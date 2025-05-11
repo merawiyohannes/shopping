@@ -22,10 +22,11 @@ def super_view(request, pk):
             return redirect('super_view', pk)
     else:
         form = MessageForm()
-    return render(request, 'conversation/super.html', {
+    return render(request, 'conversation/message_super.html', {
         "messages":messages,
         "sent_time":sent_time,
-        "form":form
+        "form":form,
+        'room_id': pk
     })
 
 
@@ -55,7 +56,7 @@ def chat_view(request):
         'conversations':conversations, 
     }
    
-    return render(request, 'conversation/chat.html', context)
+    return render(request, 'conversation/chat_user.html', context)
 
 def contact_view(request):
     conversations = Conversation.objects.filter(number__in=[request.user])
@@ -83,7 +84,7 @@ def contact_view(request):
         'conversations':conversations, 
     }
    
-    return render(request, 'conversation/contact.html', context)
+    return render(request, 'conversation/chat_super.html', context)
 
 
 def message_view(request, pk):
@@ -112,6 +113,9 @@ def message_view(request, pk):
     else:
         form = MessageForm()
     
-    context = {"form":form, "messages":messages, "sent_time":sent_time}
+    context = {"form":form,
+               "messages":messages,
+               "sent_time":sent_time,
+               "room_id":pk}
         
-    return render(request, 'conversation/message.html', context)
+    return render(request, 'conversation/message_user.html', context)

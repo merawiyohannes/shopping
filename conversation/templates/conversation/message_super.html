@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Chat-seller{% endblock %}
 
 {% block content %}
@@ -18,27 +20,20 @@
         {% endif %}
     </div>
     <div class="flex  items-center  justify-center  p-7 w-full border-t border-black bg-red-900">
-        <form action="" method="POST" class="">
+        <form action="" method="POST" class="" id="chat-form">
             {% csrf_token %}
             {{ form.text }}
             <input type="submit" value="send" class="px-3 py-2 text-white rounded-xl bg-teal-500 hover:bg-teal-700">
         </form>
-    </div>
+    </div>e
 </div>
 
-<!-- JavaScript for Auto-Scroll -->
-<script>
-    function scrollToBottom() {
-        let chatContainer = document.getElementById("messages-container");
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    // Scroll to bottom when page loads
-    window.onload = scrollToBottom;
-
-    // Scroll to bottom when a new message is added
-    document.querySelector("form").addEventListener("submit", function() {
-        setTimeout(scrollToBottom, 100); // Wait a bit for new message to load
-    });
+<script id="user-data" type="application/json">
+    "{{ request.user.username }}"
 </script>
+<script id="room-data" type="application/json">
+    "{{ room_id }}"
+</script>
+<script class="" src="{% static 'js/chat.js' %}"></script>
+
 {% endblock %}

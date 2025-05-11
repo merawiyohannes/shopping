@@ -8,5 +8,6 @@ class MessageForm(forms.ModelForm):
         
     text = forms.CharField(widget=forms.TextInput(attrs={
         "placeholder":"type message...",
-        "class":"rounded-xl px-5 py-3"
+        "class":"rounded-xl px-5 py-3",
+        "id": "message-input"
     }))

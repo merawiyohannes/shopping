@@ -96,6 +96,7 @@ TEMPLATES = [
 ]
 
 ASGI_APPLICATION = 'ale.asgi.application'
+
 CHANNEL_LAYERS = {
     'default':{
         'BACKEND':'channels.layers.InMemoryChannelLayer',
@@ -105,19 +106,13 @@ CHANNEL_LAYERS = {
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-
-if os.getenv("DJANGO_PRODUCTION") == "true":  
-    DATABASES = {
-        'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+ 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
-else:  
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
+}
 
 
 # Password validation
