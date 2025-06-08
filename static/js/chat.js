@@ -1,8 +1,4 @@
-// ==========================
-// 📦 Chat App JavaScript
-// ==========================
-
-// 🔄 Auto Scroll to Bottom
+// ========== Scroll to Bottom ==========
 function scrollToBottom() {
     const chatContainer = document.getElementById("messages-container");
     if (chatContainer) {
@@ -10,94 +6,122 @@ function scrollToBottom() {
     }
 }
 
-window.onload = scrollToBottom;
-
-// 📤 WebSocket Connection
-const notifysound = new Audio('/static/audio/notify.mp3');
-const roomNumber = JSON.parse(document.getElementById('room-data').textContent);
-const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat-user/' + roomNumber + '/');
-const currentUser = JSON.parse(document.getElementById("user-data").textContent);
-
-// 📤 Send Message
-document.getElementById("chat-form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    const input = document.getElementById("message-input");
-    const message = input.value.trim();
-
-    if (message !== "") {
-        chatSocket.send(JSON.stringify({ "message": message }));
-        input.value = "";
-    }
-});
-
-// 📥 Receive Message
-chatSocket.onmessage = function (e) {
-    const data = JSON.parse(e.data);
-    const message = data.message;
-    const sender = data.sender;
-    const timestamp = data.timestamp;
-
-    const messageBox = document.createElement("p");
-    messageBox.textContent = message + " " + timestamp;
-
-    if (sender === currentUser) {
-        messageBox.className = "p-2 bg-blue-400 text-white self-end rounded-xl border w-fit";
-        
-    } else {
-        messageBox.className = "p-2 bg-gray-400 rounded-xl self-start border w-fit flash";
-    }
-    
-    const container = document.getElementById("messages-container");
-    container.appendChild(messageBox);
-    if (sender !== currentUser) {
-        notifysound.play();
-    }
-    
-
-    scrollToBottom();
-
-    setTimeout(() => {
-        messageBox.classList.remove("flash");
-    }, 1000);
-
-    handleNotification(sender);
-};
-
-// 🔔 Handle Notification (Fixed and smart)
-function handleNotification(sender) {
-    const isOnMessagesPage = window.location.pathname.includes('/chat-user/');
-    const isonsuperpage = window.location.pathname.includes('/chat-super/');
-    const messagesNotify = document.getElementById("messages-notify");
-    const chatsNotify = document.getElementById("chats-notify");
-
-    if (!isonsuperpage && !isOnMessagesPage && sender !== currentUser) {
-        // 📢 Only trigger if NOT on chat page AND sender is NOT current user
-        if (messagesNotify) {
-            messagesNotify.classList.remove("hidden");  
-            let count = parseInt(messagesNotify.textContent) || 0;
-            messagesNotify.textContent = count + 1;
-        }
-        if (chatsNotify) {
-            chatsNotify.classList.remove("hidden");
-            let count = parseInt(chatsNotify.textContent) || 0;
-            chatsNotify.textContent = count + 1;
-        }
-         
-    }
+// ========== Check if Current Page is a Chat Page ==========
+function isOnChatPage() {
+    const path = window.location.pathname;
+    const result = /^\/chat-user\/\d+\/?$/.test(path) || /^\/chat-super\/\d+\/?$/.test(path);
+    return result;
 }
 
-// 🧹 Reset Notification Bubbles
-function resetNotification(id) {
-    const btn = document.getElementById(id + "-btn");
-    const notify = document.getElementById(id + "-notify");
+console.log(isOnChatPage());
+console.log(window.location.pathname);
 
-    if (btn && notify) {
-        btn.addEventListener("click", () => {
-            notify.textContent = 0;
-            notify.classList.add("hidden");
+// ========== Notification Sound ==========
+const notifysound = new Audio('/static/audio/notify.mp3');
+
+// ========== Get Current User Info ==========
+const userDataElement = document.getElementById("user-data");
+
+// ========== Chat WebSocket ==========
+if (userDataElement) {
+    const currentUser = JSON.parse(userDataElement.textContent);
+
+    if (isOnChatPage()) {
+        console.log("On chat-page:", window.location.pathname);
+        const roomNumber = JSON.parse(document.getElementById('room-data').textContent);
+        const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat-user/' + roomNumber + '/');
+
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            if (data.message) {
+                const messageBox = document.createElement("p");
+                messageBox.textContent = `${data.message} ${data.timestamp}`;
+
+                if (data.sender === currentUser.username) {
+                    messageBox.className = "p-2 bg-blue-400 text-white self-end rounded-xl border w-fit";
+                } else {
+                    messageBox.className = "p-2 bg-gray-400 rounded-xl self-start border w-fit flash";
+                }
+
+                document.getElementById("messages-container").appendChild(messageBox);
+                scrollToBottom();
+
+                setTimeout(() => {
+                    messageBox.classList.remove("flash");
+                }, 1000);
+            }
+        };
+
+        // ========== Send Message ==========
+        document.getElementById("chat-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const input = document.getElementById("message-input");
+            const message = input.value.trim();
+
+            if (message !== "") {
+                chatSocket.send(JSON.stringify({ message }));
+                input.value = "";
+            }
         });
     }
+
+    // ========== Notify WebSocket (Only on non-chat pages) ==========
+    if (!isOnChatPage()) {
+        console.log("Not in the chat page, the current path is:", window.location.pathname);
+        const notifySocket = new WebSocket('ws://' + window.location.host + '/ws/notify/');
+        console.log(notifySocket);
+
+        notifySocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+
+            if (data.type === "unread_count") {
+                let notifyId;
+
+                if (currentUser.is_superuser || currentUser.role === "super") {
+                    notifyId = data.sender === currentUser.username ? "messages-notify" : "chats-notify";
+                } else {
+                    notifyId = data.sender === currentUser.username ? "chats-notify" : "messages-notify";
+                }
+
+                updateNotifyBubble(notifyId, data.count);
+
+                if (data.count > 0) {
+                    notifysound.play();
+                    incrementNotify(notifyId);
+                }
+            }
+        };
+    }
 }
 
-resetNotification("messages");
-resetNotification("chats");
+// ========== Increase Notification Count ==========
+function incrementNotify(id) {
+    const bubble = document.getElementById(id);
+    if (bubble) {
+        let count = parseInt(bubble.textContent) || 0;
+        bubble.textContent = count + 1;
+        bubble.classList.remove("hidden");
+    }
+}
+
+// ========== Set or Hide Notification Count ==========
+function updateNotifyBubble(id, count) {
+    const bubble = document.getElementById(id);
+    if (bubble) {
+        if (count > 0) {
+            bubble.textContent = count;
+            bubble.classList.remove("hidden");
+        } else {
+            bubble.textContent = 0;
+            bubble.classList.add("hidden");
+        }
+    }
+}
+
+// ========== Reset on Page Load ==========
+window.onload = function () {
+    scrollToBottom();
+    if (isOnChatPage()) {
+        updateNotifyBubble("messages-notify", 0);
+    }
+}

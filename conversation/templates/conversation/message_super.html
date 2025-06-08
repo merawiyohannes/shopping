@@ -25,15 +25,11 @@
             {{ form.text }}
             <input type="submit" value="send" class="px-3 py-2 text-white rounded-xl bg-teal-500 hover:bg-teal-700">
         </form>
-    </div>e
+    </div>
 </div>
 
-<script id="user-data" type="application/json">
-    "{{ request.user.username }}"
-</script>
 <script id="room-data" type="application/json">
     "{{ room_id }}"
 </script>
-<script class="" src="{% static 'js/chat.js' %}"></script>
 
 {% endblock %}

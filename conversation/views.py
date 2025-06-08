@@ -7,7 +7,6 @@ from .forms import MessageForm
 def super_view(request, pk):
     conversation = Conversation.objects.get(pk=pk)
     messages = Message.objects.filter(conversation=conversation)
-    print(messages)
     form = MessageForm()
     sent_time = ""
     for message in messages:

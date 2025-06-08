@@ -28,10 +28,10 @@
                 {% if request.user.is_superuser %}
                     <a href="{% url 'add_item_view' %}" class="text-white rounded-xl bg-teal-500 hover:bg-teal-700 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md " title="Add new item">Add Item</a>
                     <a href="{% url 'chat_view' %}" id="chats-btn" class="text-white rounded-xl bg-yellow-500 hover:bg-yellow-700 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md " title="Add item to cart">Chats
-                        <span id="chats-notify" class="hidden text-red-500 text-xl">0</span></a>
+                        <span id="chats-notify" class="hidden text-red-800 bg-white rounded-full animate-pulse">0</span></a>
                 {% else %}
                     <a href="{% url 'contact_view' %}" id="messages-btn" class="text-white rounded-xl bg-yellow-500 hover:bg-yellow-700 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md " title="messages">message
-                        <span id="messages-notify" class="hidden text-red-500 text-xl">0</span></a>
+                        <span id="messages-notify" class="hidden text-red-800 bg-white rounded-full animate-pulse">0</span></a>
                 {% endif %}
                 <form method="POST" action="{% url 'logout_view' %}" class="">{% csrf_token %}
                     <button class="text-white rounded-xl bg-red-500 hover:bg-red-800 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md " type="submit">Logout</button>
@@ -62,39 +62,31 @@
             <h1 class="text-2xl text-white">Adress</h1>
             <p class="flex items-center space-x-2">
                 <img src="{% static 'images/phone.jpg' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md">
-                <span class="text-white">+251954545454</span>
+                <span class="text-white">+251945568508</span>
             </p>
-            <p class="flex items-center space-x-2">
-                <img src="{% static 'images/email.png' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md bg-white">
-                <span class="text-white hover:text-red-400 transition-all duration-300">aleshopping@gmail.com</span>
-            </p>
+
         </div>
         <div class="space-y-3  p-4">
             <h1 class="text-2xl text-white">Social-media Links </h1>
-            <a href="#" class="block">
+            <a href="https://t.me/ale_shopping" class="block">
                 <p class="flex items-center space-x-2">
-                    <img src="{% static 'images/fb.png' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md">
-                    <span class="text-white hover:text-red-400 transition-all duration-300">facebook</span>
+                    <img src="{% static 'images/tg.jpg' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md">
+                    <span class="text-white hover:text-red-400 transition-all duration-300">Telegram</span>
                 </p>
             </a>
-            <a href="#" class="block">
+            <a href="https://www.instagram.com/aleshopping9?igsh=ZzgzdDJ4cHJsZTdl" class="block">
                 <p class="flex items-center space-x-2">
                     <img src="{% static 'images/insta.jpg' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md">
                     <span class="text-white hover:text-red-400 transition-all duration-300">Instagram</span>
                 </p>
             </a>
-            <a href="#" class="block">
+            <a href="https://www.tiktok.com/@ale_shopping?_t=ZM-8we3i0pwCTY&_r=1" class="block">
                 <p class="flex items-center space-x-2">
                     <img src="{% static 'images/tt.png' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md bg-white">
                     <span class="text-white hover:text-red-400 transition-all duration-300">TikTok</span>
                 </p>
             </a>
-            <a href="#" class="block">
-                <p class="flex items-center space-x-2">
-                    <img src="{% static 'images/yt.jpg' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md">
-                    <span class="text-white hover:text-red-400 transition-all duration-300">YouTube</span>
-                </p>
-            </a>
+            
         </div>
         <div class="space-y-2 p-4">
             <h1 class="text-2xl text-white">Quick links</h1>
@@ -105,6 +97,13 @@
         </div>        
         
     </footer>
+    <script id="user-data" type="application/json">
+    {
+        "username": "{{ request.user.username }}",
+        "is_superuser": {{ request.user.is_superuser|yesno:"true,false" }}
+    }
+    </script>
     <script src="{% static 'js/chat.js' %}"></script>
+
 </body>
 </html>
