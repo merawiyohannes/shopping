@@ -29,7 +29,9 @@ if (userDataElement) {
     if (isOnChatPage()) {
         console.log("On chat-page:", window.location.pathname);
         const roomNumber = JSON.parse(document.getElementById('room-data').textContent);
-        const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat-user/' + roomNumber + '/');
+        const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+        const chatSocket = new WebSocket(protocol + '://' + window.location.host + '/ws/chat-user/' + roomNumber + '/');
+
 
         chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
@@ -68,7 +70,8 @@ if (userDataElement) {
     // ========== Notify WebSocket (Only on non-chat pages) ==========
     if (!isOnChatPage()) {
         console.log("Not in the chat page, the current path is:", window.location.pathname);
-        const notifySocket = new WebSocket('ws://' + window.location.host + '/ws/notify/');
+        const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+        const notifySocket = new WebSocket(protocol + '://' + window.location.host + '/ws/notify/');
         console.log(notifySocket);
 
         notifySocket.onmessage = function (e) {
