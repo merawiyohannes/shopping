@@ -8,38 +8,39 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnUsers = document.getElementById('btn_users');
     const btnPaid = document.getElementById('btn_paid_orders');
     const btnNewOrders = document.getElementById('btn_new_orders');
-    const seenUrl = btnNewOrders.dataset.url;
+    const seenUrl = btnNewOrders ? btnNewOrders.dataset.url : null;
 
     function hideAll() {
         totalOrders.classList.add('hidden');
         activeUsers.classList.add('hidden');
         paidOrders.classList.add('hidden');
-        newOrders.classList.add('hidden');
-
+        if (newOrders) newOrders.classList.add('hidden');
     }
     
-    btnNewOrders.addEventListener('click', function () {
-        hideAll();
-        newOrders.classList.remove('hidden');
-        newOrders.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        fetch(seenUrl)
-    })
+    if (btnNewOrders) {
+        btnNewOrders.addEventListener('click', function () {
+            hideAll();
+            newOrders.classList.remove('hidden');
+            newOrders.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (seenUrl) fetch(seenUrl);
+        });
+    }
     
     btnOrders.addEventListener('click', function () {
         hideAll();
         totalOrders.classList.remove('hidden');
         totalOrders.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    })
+    });
 
     btnUsers.addEventListener('click', function(){
         hideAll();
         activeUsers.classList.remove('hidden');
         activeUsers.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    })
+    });
 
     btnPaid.addEventListener('click', function(){
-        hideAll()
+        hideAll();
         paidOrders.classList.remove('hidden');
         paidOrders.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    })
-})
+    });
+});
