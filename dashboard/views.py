@@ -18,6 +18,7 @@ def dashboard_view(request):
     else:
         paid_orders = CheckOutOrder.objects.filter(created_by=request.user, is_paid=True)
         all_orders = CheckOutOrder.objects.filter(created_by=request.user)
+        new_orders = None
     active_users = User.objects.filter(is_active=True)
     context = {
         'paid_orders':paid_orders,

@@ -21,21 +21,25 @@ document.addEventListener('DOMContentLoaded', function () {
     btnNewOrders.addEventListener('click', function () {
         hideAll();
         newOrders.classList.remove('hidden');
+        newOrders.scrollIntoView({ behavior: 'smooth', block: 'start' });
         fetch(seenUrl)
     })
     
     btnOrders.addEventListener('click', function () {
         hideAll();
         totalOrders.classList.remove('hidden');
+        totalOrders.scrollIntoView({ behavior: 'smooth', block: 'start' });
     })
 
     btnUsers.addEventListener('click', function(){
         hideAll();
         activeUsers.classList.remove('hidden');
+        activeUsers.scrollIntoView({ behavior: 'smooth', block: 'start' });
     })
 
     btnPaid.addEventListener('click', function(){
         hideAll()
         paidOrders.classList.remove('hidden');
+        paidOrders.scrollIntoView({ behavior: 'smooth', block: 'start' });
     })
 })
