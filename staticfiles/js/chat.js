@@ -128,3 +128,21 @@ window.onload = function () {
         updateNotifyBubble("messages-notify", 0);
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const menuBtn = document.getElementById('menuBtn');
+    const menu = document.getElementById('menu_lists');
+
+    // Toggle menu when hamburger is clicked
+    menuBtn.addEventListener('click', function (e) {
+        menu.classList.toggle('hidden');
+        e.stopPropagation(); // Prevent click from bubbling up
+    });
+
+    // Close menu when clicking anywhere outside of it
+    document.addEventListener('click', function (e) {
+        if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+            menu.classList.add('hidden');
+        }
+    });
+    });

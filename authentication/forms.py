@@ -1,8 +1,16 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 
 CLASS_INPUT = "px-3 py-2 rounded-xl w-full border-black border"
+
+class PswChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({
+                "class": CLASS_INPUT
+            }) 
 
 class SignupForm(UserCreationForm):
     class Meta:

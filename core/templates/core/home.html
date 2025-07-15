@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load cart_extras %}
 {% block title %}Welcome to {% endblock %}
 
 {% block search %}
@@ -57,12 +58,43 @@
                         <p class="border-b text-2xl text-bold">{{ item.name }}</p>
                         <p class="border-b text-xl text-bold"><strong class="">{{ item.price }}</strong> Birr</p>
                     </div>
+
                     <div class="mt-3 text-center">
                         {% if item in new_items %}
                             <label for="" class="mt-3 px-3 py-1 bg-yellow-400 text-black ">NEW</label>
                         {% endif %}
                     </div>
                 </a>
+                {% if request.user.is_authenticated and not request.user.is_superuser %}
+                <div class="mt-4">
+                    {% with item_in_cart=request.session.cart|get_item:item.id %}
+                        <button
+                        {% if item.quantity == 0 %}
+                            disabled
+                            class="bg-yellow-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-200">
+                        {% elif item_in_cart %}
+                            disabled
+                            class="bg-green-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                        {% else %}
+                            hx-post="{% url 'add_to_cart' item.id %}"
+                            hx-trigger="click"
+                            hx-target="#cart_notify"
+                            hx-swap="innerHTML"
+                            hx-on="htmx:afterRequest: this.innerText='✔️ Added'; this.disabled=true; this.classList.replace('bg-blue-600', 'bg-green-600'); document.getElementById('cart_notify').classList.remove('hidden');"
+                            data-added="true"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                        {% endif %}
+                        {% if item_in_cart %}✔️ Added {% elif item.quantity == 0 %} Out of stock {% else %} Add to Cart {% endif %}
+                        
+                        </button>
+                    {% endwith %}
+                </div>
+                {% if not item.quantity == 0 %}
+                    <div class="mt-2">
+                        <span class="text-sm text-gray-500">Only {{ item.quantity }} left in stock!</span>
+                    </div>
+                {% endif %}
+                {% endif %}
             </div>
         {% endfor %}
     

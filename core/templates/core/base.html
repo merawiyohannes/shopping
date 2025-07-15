@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %} | Ale</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.0"></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body class="">
     <nav class="py-6 bg-red-700 sm:items-center flex flex-col space-y-2 sm:flex-col  xl:flex-row xl:justify-between ">
         <div class="m-3 p-4 mx-auto sm:w-fit flex  sm:max-w-lg  sm:items-center  ">
             <a href="{% url 'home_view' %}" class=" flex items-center space-x-2 ">
-                <img src="{% static 'images/logo3.png' %}" class="w-10 h-10 sm:w-20 sm:h-20 rounded-full border border-red-500 shadow-md"><span class="text-2xl text-white animate-pulse">ALE SHOPPING</span>
+                <img src="{% static 'images/logo3.png' %}" class="w-10 h-10 sm:w-20 sm:h-20 rounded-full red-500 shadow-md"><span class="text-2xl text-white animate-pulse">ALE SHOPPING</span>
             </a>
         </div>
 
@@ -23,33 +24,163 @@
         </div>
 
         <div class="flex flex-row mx-auto space-x-2 w-fit  sm:space-x-3 ">
-            <a href="{% url 'home_view' %}" class="text-white rounded-xl bg-blue-700 hover:bg-blue-900 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md ">Home</a>              
             {% if request.user.is_authenticated %}
+            <div class="p-3 hover:bg-red-800 flex items-center justify-center">
                 {% if request.user.is_superuser %}
-                    <a href="{% url 'add_item_view' %}" class="text-white rounded-xl bg-teal-500 hover:bg-teal-700 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md " title="Add new item">Add Item</a>
-                    <a href="{% url 'chat_view' %}" id="chats-btn" class="text-white rounded-xl bg-yellow-500 hover:bg-yellow-700 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md " title="Add item to cart">Chats
-                        <span id="chats-notify" class="hidden text-red-800 bg-white rounded-full animate-pulse">0</span></a>
+                    <a href="{% url 'chat_view' %}" id="chats-btn" class="relative" title="Chat Messages">
+                        <img 
+                        src="{% static 'images/msg.png' %}" 
+                        class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover">
+                        <span id="chats-notify" class="
+                        hidden absolute -top-2 -right-2 
+                        bg-red-500 text-white 
+                        text-xs font-semibold 
+                        rounded-full w-5 h-5 
+                        flex items-center justify-center">
+                        </span>
+                    </a>
                 {% else %}
-                    <a href="{% url 'contact_view' %}" id="messages-btn" class="text-white rounded-xl bg-yellow-500 hover:bg-yellow-700 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md " title="messages">message
-                        <span id="messages-notify" class="hidden text-red-800 bg-white rounded-full animate-pulse">0</span></a>
-                {% endif %}
-                <form method="POST" action="{% url 'logout_view' %}" class="">{% csrf_token %}
-                    <button class="text-white rounded-xl bg-red-500 hover:bg-red-800 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md " type="submit">Logout</button>
-                </form>
+                    <a href="{% url 'chat_view' %}" id="chats-btn" class="relative" title="Chat Messages">
+                        <img 
+                        src="{% static 'images/msg.png' %}" 
+                        class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover">
+                        <span id="messages-notify" class="
+                        hidden absolute -top-2 -right-2 
+                        bg-red-500 text-white 
+                        text-xs font-semibold 
+                        rounded-full w-5 h-5 
+                        flex items-center justify-center
+                        "></span>
+                    </a>    
+                {% endif %} 
+            </div>   
             {% endif %}
-
+            
             {% if not request.user.is_authenticated %}
+            <div class="flex items-center justify-center space-x-3">
                 <a href="{% url 'signup_view' %}" class="text-white rounded-xl bg-teal-500 hover:bg-teal-700 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md" title="sign up">Signup</a>
                 <a href="{% url 'login_view' %}" class="text-white rounded-xl bg-gray-500 hover:bg-gray-700 transition-all duration-400 px-2 sm:px-5 py-2 text-lg  font-sans shadow-md" title="log in">Login</a>
+            </div>
             {% endif %}
+
+            {% if request.user.is_authenticated %}
+                {% if request.user.is_superuser %}
+                    <div class="p-3 flex justify-center items-center">
+                        <a href="{% url 'dashboard_view' %}" id="order_notify" class="relative"> <!-- Parent is relative -->
+                        <img 
+                        src="{% static 'images/bell.png' %}" 
+                        alt="Bell Icon" 
+                        class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
+                        >
+                        <div
+                        id="bell_notify"
+                        hx-get="{% url 'unseen_orders_view' %}"
+                        hx-trigger="load, every 2s"
+                        hx-swap="outerHTML"
+                        >
+                        </div>
+                    </a>
+                    </div>
+                {% else %}
+                    <div title="Your-cart" class="hover:bg-red-800 p-3 flex justify-center items-center mx-auto">
+                    <a href="{% url 'cart_view' %}" id="cart_link" class="relative text-center text-yellow-500 text-sm">
+                        <div class="relative inline-block">
+                            <img src="{% static 'images/cart.jpg' %}" alt=""
+                                class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover">
+                            
+                            <span id="cart_notify"
+                                hx-get="{% url 'cart_count' %}"
+                                hx-trigger="cartUpdated from:body, load"
+                                hx-swap="innerHTML"
+                                class="px-2 py-0.5 text-xs font-medium absolute -bottom-1 left-1/2 -translate-x-1/2 {% if not request.session.cart or request.path == '/cart/' %}hidden{% endif %} px-1 text-xs text-red-800 rounded-lg bg-white shadow animate-pulse whitespace-nowrap">
+                            </span>
+                        </div>
+                    </a>
+                    </div>
+
+                {% endif %}
+            {% endif %}
+
+            <div title="Menu Button" class="p-3 hover:bg-red-800 flex items-center justify-center">
+                <button id="menuBtn" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full font-bold bg-white hover:bg-gray-200">☰</button>
+            </div>
         </div>
 
-        <!-- <div class="space-x-3  mr-3">
-            <a href="#" class="text-white  bg-teal-500 hover:bg-teal-700 border-b px-3 py-2 rounded-xl font-sans shadow-md ">Sign in</a>
-            <a href="#" class="text-white  bg-gray-500 hover:bg-gray-700 border-b px-3 py-2 rounded-xl font-sans shadow-md ">Log in</a>
-
-        </div> -->
+        <div id="menu_lists" class="hidden fixed top-0 right-0 w-64 h-screen bg-white z-50 shadow-lg border-r border-gray-200">
+        <ul class="flex flex-col divide-y divide-gray-300 text-gray-800">
         
+        <!-- Home -->
+        <li>
+            <a href="{% url 'home_view' %}" class="flex items-center px-6 py-4 hover:bg-gray-200 transition">
+                <!-- Icon: Home -->
+                <svg class="w-5 h-5 mr-3 text-gray-600" fill="none" stroke="currentColor" stroke-width="2"
+                     viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M3 9.75L12 3l9 6.75V20a1 1 0 01-1 1h-5.25a1 1 0 01-1-1v-4.5H9.25V20a1 1 0 01-1 1H3.75a1 1 0 01-1-1V9.75z"/>
+                </svg>
+                Home
+            </a>
+        </li>
+
+        {% if request.user.is_authenticated %}
+        <!-- Dashboard -->
+        <li>
+            <a href="{% url 'dashboard_view' %}" class="flex items-center px-6 py-4 hover:bg-gray-200 transition">
+                <!-- Icon: Layout Dashboard -->
+                <svg class="w-5 h-5 mr-3 text-gray-600" fill="none" stroke="currentColor" stroke-width="2"
+                     viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M3 3h7v7H3V3zm11 0h7v4h-7V3zM3 14h7v7H3v-7zm11 4h7v3h-7v-3z"/>
+                </svg>
+                Dashboard
+            </a>
+        </li>
+        
+        <li>
+        <a href="{% url 'change_password' %}" class="flex items-center px-6 py-4 hover:bg-gray-200 transition">
+            <!-- Icon: Lock -->
+            <svg class="w-5 h-5 mr-3 text-gray-600" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M12 15v2m0-6a2 2 0 100 4 2 2 0 000-4zm0-7a5 5 0 00-5 5v2h10v-2a5 5 0 00-5-5z"/>
+            </svg>
+            Change Password
+        </a>
+        </li>
+        {% endif %}
+
+        {% if request.user.is_superuser %}
+        <!-- Add Item -->
+        <li>
+            <a href="{% url 'add_item_view' %}" class="flex items-center px-6 py-4 hover:bg-gray-200 transition">
+                <!-- Icon: Plus Square -->
+                <svg class="w-5 h-5 mr-3 text-gray-600" fill="none" stroke="currentColor" stroke-width="2"
+                     viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M12 8v8m-4-4h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z"/>
+                </svg>
+                Add Item
+            </a>
+        </li>
+        {% endif %}
+
+        <!-- Logout -->
+        <li>
+            <form method="POST" action="{% url 'logout_view' %}">{% csrf_token %}
+                <button type="submit" class="flex items-center w-full text-left px-6 py-4 text-red-500 hover:bg-gray-200 transition">
+                    <!-- Icon: Log Out -->
+                    <svg class="w-5 h-5 mr-3 text-red-500" fill="none" stroke="currentColor" stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
+                    </svg>
+                    Logout
+                </button>
+            </form>
+        </li>
+    </ul>
+    </div>
+
     </nav>
 
     <div class="">
@@ -61,7 +192,7 @@
         <div class="space-y-2 p-4">
             <h1 class="text-2xl text-white">Adress</h1>
             <p class="flex items-center space-x-2">
-                <img src="{% static 'images/phone.jpg' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md">
+                <img src="{% static 'images/phone.jpg' %}" class="w-7 h-7 rounded-full red-500 shadow-md">
                 <span class="text-white">+251945568508</span>
             </p>
 
@@ -70,19 +201,19 @@
             <h1 class="text-2xl text-white">Social-media Links </h1>
             <a href="https://t.me/ale_shopping" class="block">
                 <p class="flex items-center space-x-2">
-                    <img src="{% static 'images/tg.jpg' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md">
+                    <img src="{% static 'images/tg.jpg' %}" class="w-7 h-7 rounded-full red-500 shadow-md">
                     <span class="text-white hover:text-red-400 transition-all duration-300">Telegram</span>
                 </p>
             </a>
             <a href="https://www.instagram.com/aleshopping9?igsh=ZzgzdDJ4cHJsZTdl" class="block">
                 <p class="flex items-center space-x-2">
-                    <img src="{% static 'images/insta.jpg' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md">
+                    <img src="{% static 'images/insta.jpg' %}" class="w-7 h-7 rounded-full red-500 shadow-md">
                     <span class="text-white hover:text-red-400 transition-all duration-300">Instagram</span>
                 </p>
             </a>
             <a href="https://www.tiktok.com/@ale_shopping?_t=ZM-8we3i0pwCTY&_r=1" class="block">
                 <p class="flex items-center space-x-2">
-                    <img src="{% static 'images/tt.png' %}" class="w-7 h-7 rounded-full border border-red-500 shadow-md bg-white">
+                    <img src="{% static 'images/tt.png' %}" class="w-7 h-7 rounded-full red-500 shadow-md bg-white">
                     <span class="text-white hover:text-red-400 transition-all duration-300">TikTok</span>
                 </p>
             </a>
@@ -104,6 +235,6 @@
     }
     </script>
     <script src="{% static 'js/chat.js' %}"></script>
-
+    <script src="{% static 'js/csrf.js' %}"></script>
 </body>
 </html>

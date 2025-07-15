@@ -19,6 +19,7 @@ class Item(models.Model):
     name = models.CharField(max_length=150)
     description = models.TextField(blank=True, null=True)
     price = models.FloatField()
+    quantity = models.PositiveIntegerField(default=0)
     is_sold = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     images = models.ImageField(upload_to="item_images/", storage=MediaCloudinaryStorage(), default="item_images/default.png", null=True, blank=True)

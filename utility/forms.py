@@ -6,7 +6,7 @@ CLASS_VAR = 'px-4 py-2 rounded-xl w-full border border-black'
 class EditForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ['category', 'name', 'description', 'price', 'images', 'created_by', 'is_sold']
+        fields = ['category', 'name', 'description', 'price', 'quantity', 'images', 'created_by', 'is_sold']
         
         
         widgets = {
@@ -36,6 +36,12 @@ class EditForm(forms.ModelForm):
             "price": forms.NumberInput(attrs={
                 "placeholder":"$ price",
                 "id":"price",
+                "class":CLASS_VAR
+            }),
+            
+            "quantity": forms.NumberInput(attrs={
+                "placeholder":"Quantity",
+                "id":"quantity",
                 "class":CLASS_VAR
             }),
             
@@ -48,7 +54,7 @@ class EditForm(forms.ModelForm):
 class AddItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ['category', 'name', 'description', 'price', 'images', 'created_by']
+        fields = ['category', 'name', 'description', 'price', 'quantity', 'images', 'created_by']
         
         widgets = {
             
@@ -77,6 +83,12 @@ class AddItemForm(forms.ModelForm):
             "price": forms.NumberInput(attrs={
                 "placeholder":"$ price",
                 "id":"price",
+                "class":CLASS_VAR
+            }),
+            
+            "quantity": forms.NumberInput(attrs={
+                "placeholder":"Quantity",
+                "id":"quantity",
                 "class":CLASS_VAR
             }),
             

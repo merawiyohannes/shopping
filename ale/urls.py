@@ -11,5 +11,7 @@ urlpatterns = [
     path("", include('conversation.urls')),
     path("", include('utility.urls')),
     path("", include('search.urls')),
+    path('', include('cart.urls')),
+    path('', include('dashboard.urls')),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

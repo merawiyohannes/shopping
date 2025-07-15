@@ -16,11 +16,13 @@ import cloudinary.api
 from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
+from mongoengine import connect
 
+connect(host=os.getenv('MONGO_URL'))
 
 load_dotenv()
 
-
+CHAPA_SECRET_KEY = os.getenv('CHAPA_SECRET_KEY')
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.getenv("CLOUD_NAME"),
@@ -44,7 +46,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["ale-shopping.onrender.com", "*"]
+ALLOWED_HOSTS = ["ale-shopping.onrender.com"]
 
 
 # Application definition
@@ -58,6 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'item',
+    'cart',
     'authentication',
     'conversation',
     'utility',
@@ -65,6 +68,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
     'channels',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -153,6 +157,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static/']
 STATIC_ROOT = BASE_DIR / 'staticfiles/'
+
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'Lax' 
 
 
 MEDIA_URL = 'media/'

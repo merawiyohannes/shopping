@@ -1,0 +1,14 @@
+{% if count > 0 or not request.path == '/dashboard'%}
+    <span id="bell_notify" 
+        hx-get="{% url 'unseen_orders_view' %}"
+        hx-trigger="load, every 2s"
+        hx-swap="innerHTML"
+        class="
+        absolute -top-2 -right-2 
+        bg-red-500 text-white 
+        rounded-full w-5 h-5 
+        flex items-center justify-center
+        ">
+        {{ count }}
+    </span>
+{% endif %}

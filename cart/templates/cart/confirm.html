@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %} Payment Success {% endblock %}
+
+{% block content %}
+<div class="m-5 bg-white border border-gray-400 rounded-xl p-6 shadow-md w-full max-w-md mx-auto space-y-3 font-mono text-sm">
+
+    <div id="receipt" class="space-y-3 text-center">
+        <h1 class="text-lg font-bold text-green-700">✅ Thank you! Your payment was successful.</h1>
+        <h1>{% if order.name %}{{ order.name }}, your{% else %}Your{% endif %} cart receipt is ready!</h1>      
+        {% if order.name %}<h1>Name/የከፋይ ስም: {{ order.name }}</h1>{% endif %}        
+        {% if order.phone %}<h1>Phone/ስልክ ቁጥር: {{ order.phone }}</h1>{% endif %}
+        {% if order.email %}<h1>Phone/ኢሜል አድራሻ: {{ order.email }}</h1>{% endif %}
+        <h1>Order Number/መለያ ቁጥር: <span class="font-bold">{{ order.order_number }}</span></h1>
+        <h1>Date/የክፍያ ቀን: {{ date }}</h1>
+        <h1>Time/ሰዓት: {{ time }}</h1>        
+
+    <table class="w-full text-center border-separate gap-2 mt-4">
+        <thead class="bg-yellow-300">
+            <tr>
+                <th>Items</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white">
+            {% for item in checkout_items %}
+            <tr>
+                <td># {{ item.quantity }} x {{ item.item.name }}</td>
+                <td>{{ item.subtotal|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="font-bold">Total</td>
+                <td class="bg-teal-500 font-bold">{{ total|floatformat:2 }}</td>
+            </tr>
+        </tfoot>
+    </table>
+    </div>
+    <div class=" flex justify-between mt-6 space-x-2">
+        <a href="{% url 'home_view' %}" class=" text-center px-2 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-lg">
+            🛍️ Back to Shopping
+        </a>
+        <button onclick="printReceipt()" class="px-2 py-2 bg-green-500 hover:bg-green-700 text-white rounded-lg">
+            🖨️ Download Receipt
+        </button>
+    </div>
+</div>
+<script>
+    function printReceipt() {
+        const receiptContent = document.getElementById("receipt").innerHTML;
+        const originalContent = document.body.innerHTML;
+
+        document.body.innerHTML = receiptContent;
+        window.print()
+    }
+</script>
+{% endblock %}

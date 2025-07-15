@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Your Cart {% endblock %}
+{% block content %}
+    <h1 class="mb-3 text-3xl italic font-bold">Your Cart List </h1>
+    {% include 'cart/cart_table.html' %}
+    <script src="{% static 'js/csrf.js' %}" class=""></script>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto p-6">
+    <div class="bg-white shadow-md rounded-xl p-4 mb-6">
+        <h1 class="text-xl font-bold text-gray-800">
+            👋 Hello, {{ request.user.username }}! Welcome to your Dashboard
+        </h1>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-8">
+        <a href="javascript:void(0)" id="btn_new_orders" data-url="{% url 'make_orders_seen' %}" class="">
+            <div class="bg-orange-500 text-white rounded-xl p-4 shadow-md transition transform hover:scale-[1.02] hover:shadow-xl duration-300">
+                <p class="text-sm text-gray-300">New Orders</p>
+                <p class="text-2xl font-bold">{{ new_orders|length }}</p>
+            </div>
+        </a>
+
+        <a href="javascript:void(0)" id="btn_users" class="">
+            <div class="bg-green-600 text-white rounded-xl p-4 shadow-md transition transform hover:scale-[1.02] hover:shadow-xl duration-300">
+                <p class="text-sm text-gray-300">Active Users</p>
+                <p class="text-2xl font-bold">{{ active_users|length }}</p>
+            </div>
+        </a>
+        <a href="javascript:void(0)" id="btn_all_orders" class="">
+        <div class="bg-black text-white rounded-xl p-4 shadow-md transition transform hover:scale-[1.02] hover:shadow-xl duration-300">
+            <p class="text-sm">Total Orders</p>
+            <p class="text-2xl font-bold">{{ all_orders|length }}</p>
+        </div>
+        </a>
+
+        <a href="javascript:void(0)" id="btn_paid_orders" class="">
+        <div class="bg-blue-600 text-white rounded-xl p-4 shadow-md transition transform hover:scale-[1.02] hover:shadow-xl duration-300">
+            <p class="text-sm">Paid Orders</p>
+            <p class="text-2xl font-bold">{{ paid_orders|length }}</p>
+        </div>
+        </a>
+    </div>
+
+    <div id="new_orders" class="hidden bg-white rounded-xl shadow-md p-6 mb-10 bg-red-200">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">Newest Orders</h2>
+        {% if new_orders %}
+            {% for order in new_orders %}
+                <div class="border-b py-4">
+                    <p class="font-bold text-gray-700">🧾 Order #{{ order.order_number }}</p>
+                    <p class="text-sm text-gray-500">
+                        By: {{ order.name }} | Phone: {{ order.phone }} | Email: {{ order.email }} <br>
+                        Ordered at: {{ order.ordered_at|date:"M d, Y - H:i" }} | 
+                        <span class="text-green-600 font-semibold">NEW</span>
+                    </p>
+
+                    <ul class="mt-2 ml-4 list-disc text-sm text-gray-600">
+                        {% for item in order.checkoutitem_set.all %}
+                            <li>{{ item.quantity }} x {{ item.item.name }} — {{ item.subtotal }} ETB</li>
+                        {% empty %}
+                            <li>No items in this order.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-red-500 font-semibold">No new orders.</p>
+        {% endif %}
+    </div>
+
+    <div id="total_orders" class="hidden bg-white rounded-xl shadow-md p-6 mb-10 bg-red-200">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">All Orders</h2>
+        {% if all_orders %}
+            {% for order in all_orders %}
+                <div class="border-b py-4">
+                    <p class="font-bold text-gray-700">🧾 Order #{{ order.order_number }}</p>
+                    <p class="text-sm text-gray-500">
+                        By: {{ order.name }} | Phone: {{ order.phone }} | Email: {{ order.email }} <br>
+                        Ordered at: {{ order.ordered_at|date:"M d, Y - H:i" }} | 
+                        {% if order.is_paid %}
+                            <span class="text-green-600 font-semibold">PAID</span>
+                        {% else %}
+                            <span class="text-red-500 font-semibold">UNPAID</span>
+                        {% endif %}
+                    </p>
+
+                    <!-- Fetch and show items -->
+                    <ul class="mt-2 ml-4 list-disc text-sm text-gray-600">
+                        {% for item in order.checkoutitem_set.all %}
+                            <li>{{ item.quantity }} x {{ item.item.name }} — {{ item.subtotal }} ETB</li>
+                        {% empty %}
+                            <li>No items in this order.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-red-500 font-semibold">No orders available.</p>
+        {% endif %}
+    </div>
+
+    <!-- Active Users List -->
+    <div id="active_users" class="hidden w-fit bg-gray-600 text-[#00FF00] rounded-xl shadow-md p-6 mb-10">
+        <h2 class="text-xl font-semibold mb-4 text-[#00FF00]">Active Users</h2>
+        {% if active_users %}
+            {% for user in active_users %}
+                <div class="flex justify-start items-center space-x-2 border-b py-2">
+                    <img src="{% static 'images/default2.png' %}" alt="" class="w-8 h-8 rounded-full object-cover border border-[#00FF00]">
+                    <p class="text-sm text-center">{{ user.username }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center ">No Active Users!</p>
+        {% endif %}
+    </div>
+
+    <div id="paid_orders" class="hidden bg-white text-white rounded-xl shadow-md p-6 mb-10">
+        <h2 class="text-xl text-blue-600 font-semibold mb-4">Paid Orders</h2>
+        {% if paid_orders %}
+            {% for order in paid_orders %}
+                <div class="border-b py-4">
+                    <p class="font-bold text-gray-700">🧾 Order #{{ order.order_number }}</p>
+                    <p class="text-sm text-gray-500">
+                        By: {{ order.name }} | Phone: {{ order.phone }} | Email: {{ order.email }} <br>
+                        Ordered at: {{ order.ordered_at|date:"M d, Y - H:i" }} | 
+                        {% if order.is_paid %}
+                            <span class="text-green-600 font-semibold">PAID</span>
+                        {% else %}
+                            <span class="text-red-500 font-semibold">UNPAID</span>
+                        {% endif %}
+                    </p>
+
+                    <!-- Fetch and show items -->
+                    <ul class="mt-2 ml-4 list-disc text-sm text-gray-600">
+                        {% for item in order.checkoutitem_set.all %}
+                            <li>{{ item.quantity }} x {{ item.item.name }} — {{ item.subtotal }} ETB</li>
+                        {% empty %}
+                            <li>No items in this order.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-red-500 font-semibold">No orders available.</p>
+        {% endif %}
+    </div>
+</div>
+<script src="{% static 'js/dashboard.js' %}" class=""></script>
+{% endblock %}
