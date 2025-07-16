@@ -17,29 +17,36 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (btnNewOrders && newOrders) {
-    const seenUrl = btnNewOrders.dataset?.url;
-    btnNewOrders.addEventListener('click', function () {
-        hideAll();
-        newOrders.classList.remove('hidden');
-        newOrders.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        if (seenUrl) fetch(seenUrl);
-    });
+        const seenUrl = btnNewOrders.dataset?.url;
+        btnNewOrders.addEventListener('click', function () {
+            hideAll();
+            newOrders.classList.remove('hidden');
+            newOrders.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (seenUrl) fetch(seenUrl);
+        });
+    }
 
-    btnOrders?.addEventListener('click', function () {
-        hideAll();
-        totalOrders?.classList.remove('hidden');
-        totalOrders?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    if (btnOrders && totalOrders) {
+        btnOrders.addEventListener('click', function () {
+            hideAll();
+            totalOrders.classList.remove('hidden');
+            totalOrders.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
 
-    btnUsers?.addEventListener('click', function () {
-        hideAll();
-        activeUsers?.classList.remove('hidden');
-        activeUsers?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    if (btnUsers && activeUsers) {
+        btnUsers.addEventListener('click', function () {
+            hideAll();
+            activeUsers.classList.remove('hidden');
+            activeUsers.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
 
-    btnPaid?.addEventListener('click', function () {
-        hideAll();
-        paidOrders?.classList.remove('hidden');
-        paidOrders?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    if (btnPaid && paidOrders) {
+        btnPaid.addEventListener('click', function () {
+            hideAll();
+            paidOrders.classList.remove('hidden');
+            paidOrders.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
 });
