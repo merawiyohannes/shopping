@@ -17,11 +17,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (btnNewOrders && newOrders) {
-        const seenUrl = btnNewOrders.dataset.url;
         btnNewOrders.addEventListener('click', function () {
             hideAll();
             newOrders.classList.remove('hidden');
             newOrders.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const seenUrl = btnNewOrders.dataset.url;
             fetch(seenUrl);
         });
     }
