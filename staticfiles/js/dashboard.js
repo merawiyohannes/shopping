@@ -8,34 +8,38 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnUsers = document.getElementById('btn_users');
     const btnPaid = document.getElementById('btn_paid_orders');
     const btnNewOrders = document.getElementById('btn_new_orders');
-    const seenUrl = btnNewOrders.dataset.url;
 
     function hideAll() {
-        totalOrders.classList.add('hidden');
-        activeUsers.classList.add('hidden');
-        paidOrders.classList.add('hidden');
-        newOrders.classList.add('hidden');
-
+        totalOrders?.classList.add('hidden');
+        activeUsers?.classList.add('hidden');
+        paidOrders?.classList.add('hidden');
+        newOrders?.classList.add('hidden');
     }
-    
+
+    if (btnNewOrders && newOrders) {
+    const seenUrl = btnNewOrders.dataset?.url;
     btnNewOrders.addEventListener('click', function () {
         hideAll();
         newOrders.classList.remove('hidden');
-        fetch(seenUrl)
-    })
-    
-    btnOrders.addEventListener('click', function () {
-        hideAll();
-        totalOrders.classList.remove('hidden');
-    })
+        newOrders.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (seenUrl) fetch(seenUrl);
+    });
 
-    btnUsers.addEventListener('click', function(){
+    btnOrders?.addEventListener('click', function () {
         hideAll();
-        activeUsers.classList.remove('hidden');
-    })
+        totalOrders?.classList.remove('hidden');
+        totalOrders?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
 
-    btnPaid.addEventListener('click', function(){
-        hideAll()
-        paidOrders.classList.remove('hidden');
-    })
-})
+    btnUsers?.addEventListener('click', function () {
+        hideAll();
+        activeUsers?.classList.remove('hidden');
+        activeUsers?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    btnPaid?.addEventListener('click', function () {
+        hideAll();
+        paidOrders?.classList.remove('hidden');
+        paidOrders?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+});
